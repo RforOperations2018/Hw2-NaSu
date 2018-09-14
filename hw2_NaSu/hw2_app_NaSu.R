@@ -18,7 +18,7 @@ mutate(data.load, Project.Title = as.character(Project.Title),
        Grant.Type = as.factor(Grant.Type),
        State = as.factor(State),
        Applicant = as.factor(Applicant))
-class(data.load$State)
+
 # Define UI for applicatio
 ui <- navbarPage("Investing in Innovation Appplications NavBar", 
                  tabPanel("Plot",
