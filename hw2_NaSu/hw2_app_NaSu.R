@@ -69,7 +69,7 @@ ui <- navbarPage("Investing in Innovation Appplications NavBar",
 # Define server logic
 server <- function(input, output, session = session) {
   # Filtered investing data
-  swInput <- reactive({
+  iaInput <- reactive({
     data <- data.load %>%
       # Slider Filter
       filter(Award.Requested >= input$AwardRequestedSelect[1] & Award.Requested <= input$AwardRequestedSelect[2])
@@ -83,14 +83,10 @@ server <- function(input, output, session = session) {
     }
     return(data)
   })
-  # Reactive melted data
-  mwInput <- reactive({
-    swInput() %>%
-      melt(id = "Applicant")
-  })
+
   # plot three figures
   output$plot_length <- renderPlotly({
-    dat <- swInput()
+    dat <- iaInput()
     ggplotly(
       ggplot(data= dat, aes(x = Award.Length, fill = Grant.Type, text = paste0("<b>"))) + 
         geom_bar() + 
@@ -100,7 +96,7 @@ server <- function(input, output, session = session) {
         tooltip = "text")
     })
   output$plot_requested <- renderPlotly({
-    dat <- swInput() 
+    dat <- iaInput() 
     ggplotly(
       ggplot(data= dat, aes(x = Applicant, y = Award.Requested, fill = Award.Length , text = paste0("<b>", Applicant, ":</b>",
                                                                                                     "<br>State:",State,
@@ -115,7 +111,7 @@ server <- function(input, output, session = session) {
       tooltip = "text") 
     })
   output$plot_requested2 <- renderPlotly({
-    dat <- swInput() 
+    dat <- iaInput() 
     ggplotly(
       ggplot(data= dat, aes(x = Award.Requested, fill = Award.Length)) + 
         geom_histogram() +   theme(axis.title.x=element_blank(),
@@ -127,7 +123,7 @@ server <- function(input, output, session = session) {
   })
   # Data Table
   output$table <- DT::renderDataTable({
-    data <- swInput()
+    data <- iaInput()
     
     subset(data, select = c(Applicant, City, State, Project.Title, Grant.Type, Award.Requested, Location))
   })
